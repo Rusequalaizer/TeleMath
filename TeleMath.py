@@ -287,10 +287,8 @@ async def start(message):
 async def main(message):
     if (message.text == 'GPT'):
         tmath.set_mode('GPT')
-
     elif (message.text == 'DALL-E'):
         tmath.set_mode('DALL-E')
-
     elif (message.text == 'Mathematica'):
         tmath.set_mode('Mathematica')
 
@@ -300,7 +298,6 @@ async def main(message):
 
         if (tmath.mode == 'GPT' and message.text != 'GPT'):
             await bot.send_message(message.chat.id, models.generate_respose_gpt(message.text))
-
     elif (message.text == 'DALL-E' or tmath.mode == 'DALL-E'):
         if (tmath.mode == message.text):
             await bot.send_message(message.chat.id, 'Пришлите любой текстовый запрос.\n\nВ ответ Вам будет выслано изображение сгенерированное DALL-E')
@@ -308,9 +305,10 @@ async def main(message):
         if (tmath.mode == 'DALL-E' and message.text != 'DALL-E'):
             models.generate_respose_alpha(message.text)
             image = open('output.jpg', 'rb')
-            await bot.send_photo(message.chat.id, image)
-            image.close()
 
+            await bot.send_photo(message.chat.id, image)
+
+            image.close()
     elif (message.text == 'Mathematica' or tmath.mode == 'Mathematica'):
         if (tmath.mode == message.text):
             math_info = get_from_json('data.json', 'math_info')
@@ -321,6 +319,7 @@ async def main(message):
             parts = message.text.split(": ")
             dict_result['modificator'] = parts[0]
             dict_result['functions'] = parts[1]
+
             if (dict_result['modificator'] == 'func'):
                 fig_name = telemath.plot_math_function(dict_result['functions'])
                 derivates = telemath.derivate(dict_result['functions'])
@@ -338,22 +337,25 @@ async def main(message):
                     msg += f'Введенная функция: {functions[i]}\n\n'
                     msg += f'Неопределенный интеграл: {integrals[i]}\n\n'
                     msg += f'Производная функции: {derivates[i]}\n\n'
+
                     await bot.send_message(message.chat.id, msg)
-            
             elif (dict_result['modificator'] == 'eval'):
                 data = dict_result['functions'].split(';')
+
                 if (len(data) == 2):
                     str_func = data[0]
                     str_values = data[1]
+
                     result = telemath.evaluate_expression(str_func, str_values)
+
                     optimised_result = []
                     for number in result:
                         optimised_result.append(telemath.optimize_number(number))
                     string = ''
                     for number in optimised_result:
                         string += f'{number}\n'
-                    await bot.send_message(message.chat.id, string)
 
+                    await bot.send_message(message.chat.id, string)
             elif (dict_result['modificator'] == 'approx'):
                 data = dict_result['functions'].split(';')
                 if (len(data) == 2):
@@ -366,7 +368,6 @@ async def main(message):
 
                     plot_image.close()
                     os.remove(fig_name)
-
             elif (dict_result['modificator'] == 'interp'):
                 data = dict_result['functions'].split(';')
                 if (len(data) == 2):
@@ -379,7 +380,6 @@ async def main(message):
 
                     plot_image.close()
                     os.remove(fig_name) 
-
             elif (dict_result['modificator'] == 'integ'):
                 data = dict_result['functions'].split(';')
                 if (len(data) == 2):
@@ -387,15 +387,17 @@ async def main(message):
                     borders = data[1].split() 
                     a = borders[0]
                     b = borders[1]
+
                     result = telemath.calculate_integral(func, a, b)
                     result = telemath.optimize_number(result)
-                    await bot.send_message(message.chat.id, f'({func})dx = {result}')
 
+                    await bot.send_message(message.chat.id, f'({func})dx = {result}')
             elif (dict_result['modificator'] == 'dev'):
                 numbers = dict_result['functions'].split()
                 numbers = [float(k) for k in numbers]
                 result = telemath.calculate_std_dev(numbers)
                 result = telemath.optimize_number(result)
+                
                 await bot.send_message(message.chat.id, f'std dev = {result}')
 
 async def main():
