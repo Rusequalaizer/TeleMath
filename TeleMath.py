@@ -262,7 +262,7 @@ def get_from_json(file_name: str, info: str):
 
     return result
 
-gpt_dictionary = get_from_json('data.json', 'gpt_dict')
+gpt_dictionary = get_from_json('texts-for-example.json', 'gpt_dict')
 
 models.gpt(OPENAI_TOKEN, gpt_dictionary)
 models.alpha_image(OPENAI_TOKEN)
@@ -279,7 +279,7 @@ async def start(message):
     btn3 = types.KeyboardButton("Mathematica")
     markup.add(btn1, btn2, btn3)
 
-    info_about_modes = get_from_json('data.json', 'bot_mode')
+    info_about_modes = get_from_json('texts-for-example.json', 'bot_mode')
 
     await bot.send_message(message.chat.id, info_about_modes, reply_markup=markup)
 
@@ -311,7 +311,7 @@ async def main(message):
             image.close()
     elif (message.text == 'Mathematica' or tmath.mode == 'Mathematica'):
         if (tmath.mode == message.text):
-            math_info = get_from_json('data.json', 'math_info')
+            math_info = get_from_json('texts-for-example.json', 'math_info')
             await bot.send_message(message.chat.id, math_info)
 
         if (tmath.mode == 'Mathematica' and message.text != 'Mathematica'):
